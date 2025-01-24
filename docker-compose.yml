@@ -1,0 +1,59 @@
+version: '3.9'
+
+services:
+  db:
+    image: postgres:15
+    container_name: bot_db
+    restart: always
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    # Healthcheck, чтобы дождаться готовности PostgreSQL
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U myuser -d mydb"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - bot_network
+
+  bot:
+    build: .
+    container_name: caldav_bot
+    restart: always
+    depends_on:
+      db:
+        condition: service_healthy   # Запустится после здоровья db
+    environment:
+      # Переменные окружения (берутся из .env, но можно дублировать)
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY}
+      BOT_TOKEN_ENCRYPTED: ${BOT_TOKEN_ENCRYPTED}
+      CALDAV_ENCRYPTED_PASSWORD: ${CALDAV_ENCRYPTED_PASSWORD}
+      CALDAV_USERNAME: ${CALDAV_USERNAME}
+
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+
+      SUPPORT_CHAT_ID: ${SUPPORT_CHAT_ID}
+      SALES_CHAT_ID: ${SALES_CHAT_ID}
+
+      CHECK_INTERVAL_MINUTES: ${CHECK_INTERVAL_MINUTES}
+      DAILY_NOTIFICATION_HOUR: ${DAILY_NOTIFICATION_HOUR}
+      MORNING_REPORT_HOUR: ${MORNING_REPORT_HOUR}
+      TZ: ${TZ}
+    networks:
+      - bot_network
+
+volumes:
+  db_data:
+
+networks:
+  bot_network:
+    driver: bridge

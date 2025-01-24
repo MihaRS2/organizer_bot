@@ -1,0 +1,8 @@
+aiogram==3.0.0b7
+sqlalchemy==2.0.20
+psycopg2==2.9.6
+cryptography==41.0.3
+caldav>=0.9.2
+vobject>=0.9.6.1
+apscheduler==3.9.1
+pytz==2023.3
