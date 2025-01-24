@@ -1,0 +1,181 @@
+
+# **Organizer Bot**
+
+**Organizer Bot** is a Telegram bot for managing calendars and reminders. It integrates with CalDAV, supports working with technical meetings, tech support department meetings, and notifies users of reschedules, cancellations, and new events.
+
+---
+
+## **Features**
+
+### 📅 **Daily Reminders**
+- **At 7:00 AM**, the bot sends a list of all meetings scheduled for the day.
+- Notifications include start and end times, title, and technical status.
+
+### 🚨 **Notifications and Alerts**
+1. Alerts when a meeting is scheduled **on the same day**.
+2. Alerts when a meeting overlaps with **tech support department meetings**:
+   - Monday (3:00 PM–4:00 PM): Support meeting.
+   - Friday (3:00 PM–5:00 PM): Big meeting.
+3. Marks a meeting as **technical** (keywords like "tech.meeting", "tech.call", etc.).
+
+### 🔄 **Event Changes**
+- Notifies of canceled meetings.
+- Alerts users about rescheduled meetings with updated times.
+
+### 🚫 **Access Control**
+- Employees can take meetings, but the bot blocks the ability to take meetings that overlap with department meetings.
+
+---
+
+## **Technologies**
+
+- **Programming Language:** Python 3.9
+- **Libraries:**
+  - `aiogram` for Telegram API integration.
+  - `sqlalchemy` for database management.
+  - `caldav` for calendar integration.
+  - `cryptography` for secure encryption.
+  - `apscheduler` for task scheduling.
+- **Database:** PostgreSQL.
+- **Infrastructure:** Docker, Docker Compose.
+
+---
+
+## **Setup and Deployment**
+
+### 1. **Clone the Repository**
+
+Clone the project to your local machine:
+
+```bash
+git clone https://github.com/MihaRS2/organizer_bot.git
+cd organizer_bot
+```
+
+---
+
+### 2. **Create a `.env` File**
+
+Create a `.env` file in the root directory of the project with the following content:
+
+```env
+# CalDAV settings
+CALDAV_USERNAME=
+CALDAV_ENCRYPTED_PASSWORD=encrypted_password
+
+# PostgreSQL settings
+DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=organizer_db
+DB_USER=organizer_user
+DB_PASSWORD=secure_password
+
+# Telegram Bot
+ENCRYPTION_KEY=encryption_key
+BOT_TOKEN_ENCRYPTED=encrypted_bot_token
+
+# Notification Chats
+SUPPORT_CHAT_ID=-
+SALES_CHAT_ID=-
+
+# Scheduling settings
+CHECK_INTERVAL_MINUTES=30
+DAILY_NOTIFICATION_HOUR=20
+MORNING_REPORT_HOUR=7
+```
+
+---
+
+### 3. **Build and Run with Docker Compose**
+
+Build and start the project:
+
+```bash
+docker-compose up --build -d
+```
+
+This will create:
+1. A PostgreSQL container for the database.
+2. A bot container with the Python application.
+
+---
+
+### 4. **Verify the Setup**
+
+Check if the containers are running:
+
+```bash
+docker ps
+```
+
+View the bot logs:
+
+```bash
+docker logs caldav_bot
+```
+
+---
+
+## **Usage**
+
+### Bot Commands:
+
+1. **`/start`** — Welcome message and bot info.
+2. **`/add <user_id>`** — Add a new employee.
+3. **`/rm <user_id>`** — Remove an employee.
+
+---
+
+## **Project Structure**
+
+```
+organizer_bot/
+├── bot/
+│   ├── handlers/               # Command and callback handlers
+│   │   ├── callbacks.py
+│   │   ├── commands.py
+│   ├── models/                 # Database models
+│   │   ├── employees.py
+│   │   ├── events.py
+│   ├── caldav_client.py        # CalDAV integration
+│   ├── db.py                   # Database configuration
+│   ├── encryption.py           # Encryption utilities
+│   ├── main.py                 # Entry point
+├── .env                        # Environment variables (ignored in .gitignore)
+├── .gitignore                  # Ignored files
+├── Dockerfile                  # Docker build instructions
+├── docker-compose.yml          # Docker Compose configuration
+├── requirements.txt            # Python dependencies
+└── README.md                   # Project documentation
+```
+
+---
+
+## **Development**
+
+### Local Environment Setup
+
+To develop and test the bot locally without Docker:
+
+1. Install Python 3.9.
+2. Install dependencies:
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. Run the bot:
+
+   ```bash
+   python -m bot.main
+   ```
+
+---
+
+## **Security**
+
+- The `.env` file is included in `.gitignore` to ensure sensitive data does not get exposed in the repository.
+- All passwords and tokens are securely stored using encryption (via the `cryptography` library).
+- PostgreSQL access is password-protected.
+
+
