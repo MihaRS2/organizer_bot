@@ -12,11 +12,11 @@ class BotConfig:
     CALDAV_USERNAME = os.getenv("CALDAV_USERNAME", "")
     CALDAV_ENCRYPTED_PASSWORD = os.getenv("CALDAV_ENCRYPTED_PASSWORD", "")
 
-    DB_HOST = os.getenv("DB_HOST", "db")
-    DB_PORT = os.getenv("DB_PORT", "5432")
-    DB_NAME = os.getenv("DB_NAME", "mydb")
-    DB_USER = os.getenv("DB_USER", "myuser")
-    DB_PASSWORD = os.getenv("DB_PASSWORD", "mypassword")
+    DB_HOST = os.getenv("DB_HOST")
+    DB_PORT = os.getenv("DB_PORT")
+    DB_NAME = os.getenv("DB_NAME")
+    DB_USER = os.getenv("DB_USER")
+    DB_PASSWORD = os.getenv("DB_PASSWORD")
 
     SUPPORT_CHAT_ID = int(os.getenv("SUPPORT_CHAT_ID", "0"))
     SALES_CHAT_ID = int(os.getenv("SALES_CHAT_ID", "0"))
